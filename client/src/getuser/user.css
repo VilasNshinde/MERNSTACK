@@ -1,0 +1,23 @@
+.userTable{
+  width: 60%;
+  margin: 50px auto;
+  padding: 60px;
+  background-color: aqua;
+  border-radius: 10px;
+  box-shadow: 1px 1px 8px;
+}
+
+.userTable table{
+    width: 100%;
+    margin-top: 20px;
+
+}
+
+.userTable table th{
+    background-color: darkcyan;
+    ;
+}
+
+.btn-danger{
+    margin: 0 10px;
+}
