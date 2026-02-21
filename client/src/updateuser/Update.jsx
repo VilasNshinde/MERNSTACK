@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import './adduser.css';
-import{ Link, useNavigate } from "react-router-dom"
+import React, { useState,useEffect} from "react";
+import './update.css';
+import{ Link, useNavigate, useParams} from "react-router-dom"
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const Adduser =()=> {
+const Updateuser =()=> {
 
   const users ={
     name:"",
@@ -16,18 +16,33 @@ const Adduser =()=> {
   const [user, setUser]=useState(users)
 
   const navigate = useNavigate();
+  const {id}=useParams();
   const inputHandler = (e)=>{
     const {name, value}=e.target
     setUser({...user,[name]:value});
-    
+
   }
 
+  useEffect(()=>{
+   
+  axios.get(`http://localhost:8000/api/user/${id}`)
+  .then((response)=>{
+
+    setUser(response.data);
+
+  })
+  .catch((error)=>{
+    console.log(error);
+  })
+
+  },[id]);
  
-  const submitFrom = async(e)=>{
+  const submitForm = async (e)=>{
     e.preventDefault()
-   await axios.post("http://localhost:8000/api/user/",user)
+
+    await axios.put(`http://localhost:8000/api/update/user/${id}`, user)
    .then((response)=>{
-     
+    console.log(response.data);
     toast.success(response.data.message,{postion:"top-right"});
      navigate("/");
    })  
@@ -42,13 +57,14 @@ const Adduser =()=> {
     <div className="adduser">
       <Link to="/" type="button" className="btn btn-primary">Back</Link>
       <h3>Add New User</h3>
-      <form className="addUserForm" onSubmit={submitFrom}>
+      <form className="addUserForm" onSubmit={submitForm}>
         <div className="inputGroup">
           <label htmlFor="name">Name</label>
           <input
             type="text"
             id="name"
             name="name"
+            value={user.name}
             onChange={inputHandler}
             autoComplete="off"
             placeholder="Enter you name"
@@ -60,6 +76,7 @@ const Adduser =()=> {
             type="text"
             id="email"
             name="email"
+             value={user.email}
             onChange={inputHandler}
             autoComplete="off"
             placeholder="Enter you Email"
@@ -71,6 +88,7 @@ const Adduser =()=> {
             type="text"
             id="address"
             name="address"
+            value={user.address}
             onChange={inputHandler}
             autoComplete="off"
             placeholder="Enter you Address"
@@ -86,4 +104,4 @@ const Adduser =()=> {
   );
 }
 
-export default Adduser;
+export default Updateuser;

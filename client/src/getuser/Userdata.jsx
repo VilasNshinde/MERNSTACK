@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./user.css";
+import toast from "react-hot-toast";
 
 import { Link } from "react-router-dom";
 
@@ -18,6 +19,17 @@ function Userdata() {
     };
     fetchdata();
   }, []);
+
+  const deleteUser= async(userId)=>{
+
+    await axios.delete(`http://localhost:8000/api/delete/user/${userId}`)
+    .then((response)=>{
+      setUsers((prevUser)=>prevUser.filter((user) => user._id !== userId))
+      toast.success(response.data.message,{postion:"top-right"})
+
+    })
+    
+  }
 
   return (
     <div className="userTable">
@@ -44,10 +56,12 @@ function Userdata() {
               <td>{user.email}</td>
               <td>{user.address}</td>
               <td className="actionButton">
-                <button type="button" className="btn btn-warning me-2">
+                <Link to={`/update/` +user._id} type="button" className="btn btn-warning me-2">
                   <i className="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button type="button" className="btn btn-danger">
+                </Link>
+                <button onClick={()=>deleteUser(user._id)}
+                
+                type="button" className="btn btn-danger">
                   <i className="fa-solid fa-trash"></i>
                 </button>
               </td>
